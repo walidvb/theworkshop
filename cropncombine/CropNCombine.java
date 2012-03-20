@@ -25,17 +25,16 @@ public class CropNCombine extends PApplet {
 	int r;
 
 	public void setup() {
-		frameRate(30);
+		frameRate(60);
 
 		size(totWidth, totHeight);
 		populate(true);
 	}
 
 	public void draw() {
-
 		if(draw_)
 		{
-
+			
 			//update the img list
 			//populate(true);
 			PImage tmpimg = createImage(totWidth, totHeight, RGB);
@@ -43,7 +42,6 @@ public class CropNCombine extends PApplet {
 			int height = totHeight/(n);
 			//make part appear at the beginning
 			int first = (n-1-step);
-			println(first);
 			tmpimg.copy(img[first], 0, 0, totWidth, r, 0, 0, totWidth, r);
 
 			//loop over img[] and take the 1/n percent of each image
@@ -69,11 +67,31 @@ public class CropNCombine extends PApplet {
 
 			image(tmpimg, 0, 0);
 			//something to be done with this... 
-			r+=2;
+			r+=1;
 			//draw_=false;
+			int butSize=20;
+			rect(totWidth-30, totHeight-30, butSize, butSize);
+			fill(0,0,0);
 		}
 	}
+	
+	public void mousePressed()
+	{
+	  if(overRect(totWidth-30, totHeight-30, 20, 20)) {
+	    draw_ = !draw_;
+	  }
+	}
 
+	boolean overRect(int x, int y, int width, int height) 
+	{
+	  if (mouseX >= x && mouseX <= x+width && 
+	      mouseY >= y && mouseY <= y+height) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	}
+	//    functions
 	String[] listFileNames(String dir) {
 		File file = new File(dir);
 		if (file.isDirectory()) {
