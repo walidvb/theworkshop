@@ -23,16 +23,16 @@ public class CropNCombine extends PApplet {
 	int loadedID = 0;
 	int step = 0;
 	int r;
-	
+
 	public void setup() {
-		  frameRate(10);
+		frameRate(30);
 
 		size(totWidth, totHeight);
 		populate(true);
 	}
 
 	public void draw() {
-		
+
 		if(draw_)
 		{
 
@@ -41,24 +41,35 @@ public class CropNCombine extends PApplet {
 			PImage tmpimg = createImage(totWidth, totHeight, RGB);
 			int n = img.length;
 			int height = totHeight/(n);
+			//make part appear at the beginning
+			int first = (n-1-step);
+			println(first);
+			tmpimg.copy(img[first], 0, 0, totWidth, r, 0, 0, totWidth, r);
+
 			//loop over img[] and take the 1/n percent of each image
 			for(int i = 0; i < n; i++)
 			{
+
+
+
 				int pos = (i+step)%(n);
 				int offset = pos*height+r;
+
+
 				tmpimg.copy(img[i], 0, offset, totWidth, height, 0, offset, totWidth, height);
-				
-				println(step + " pos: " + pos + " offset: " + offset + " tot: " + totHeight);
+
+				//Make 'em move and return to beginning
 				if(offset > totHeight)
 				{
-					//println(step + " pos: " + pos + "offset " + offset + " tot" + totHeight);
 					step = (step+1)%n;
 					r=0;
 				}
 			}
+			
+
 			image(tmpimg, 0, 0);
 			//something to be done with this... 
-			r+=1;
+			r+=2;
 			//draw_=false;
 		}
 	}
