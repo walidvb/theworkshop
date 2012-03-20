@@ -30,7 +30,7 @@ public class CropNCombine extends PApplet {
 	public int dir = 0;
 	private int state = 3;
 	private int n;
-
+aa
     Tools controls = new Tools(this);
 
 	public void setup() {
