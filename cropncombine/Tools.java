@@ -1,9 +1,6 @@
 package cropncombine;
 
 import java.io.File;
-import processing.core.PApplet;
-import processing.core.PImage;
-import sojamo.drop.SDrop;
 import toxi.gui.GUIElement;
 import toxi.gui.GUIManager;
 import toxi.gui.IntRangeBuilder;
@@ -18,18 +15,14 @@ public class Tools {
 	Tab tab;
 	private int loadedID = 0;
 
-	  
-		
-		@GUIElement(label = "frameRate")
-		public int frameRate;
-		
-		
-		IntRangeBuilder asd;
+	@GUIElement(label = "frameRate")
+	public int frameRate;
+
 	Tools(CropNCombine p5){
 		p = p5;
 		frameRate = p.frameRate;
 	}
-	
+
 
 	public void setup() {
 		initGUI();
@@ -62,6 +55,7 @@ public class Tools {
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void populate(boolean reset){
 		String path = "/Users/Gaston/Desktop/proc/";
 		String[] fileNames = listFileNames(path);

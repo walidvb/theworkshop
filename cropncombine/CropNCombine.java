@@ -4,7 +4,6 @@ package cropncombine;
 
 import java.io.File;
 
-import controlP5.ControlP5;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -24,13 +23,11 @@ public class CropNCombine extends PApplet {
 	public PImage img[] = new PImage[4];
 	private int totHeight = 450;
 	private int totWidth = 450;
-	private boolean draw_ = true;
-	private int loadedID = 0;
 	private int step = 0;
 	public int dir = 0;
 	private int state = 3;
 	private int n;
-aa
+	
     Tools controls = new Tools(this);
 
 	public void setup() {
