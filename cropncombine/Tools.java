@@ -1,6 +1,9 @@
 package cropncombine;
 
 import java.io.File;
+
+import processing.core.PApplet;
+import processing.core.PImage;
 import toxi.gui.GUIElement;
 import toxi.gui.GUIManager;
 import toxi.gui.IntRangeBuilder;
@@ -14,7 +17,7 @@ public class Tools {
 	GUIManager gui;
 	Tab tab;
 	private int loadedID = 0;
-
+	private String fileList[] = new String[0];
 	@GUIElement(label = "frameRate")
 	public int frameRate;
 
@@ -55,18 +58,22 @@ public class Tools {
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	public void populate(boolean reset){
 		String path = "/Users/Gaston/Desktop/proc/";
 		String[] fileNames = listFileNames(path);
 		if(reset)
 			loadedID = 0;
+		p.println(path + ": " +fileNames.length);
 		for(int i = 0; i < fileNames.length; i++)
-		{
+		{	
 			String fileName =  fileNames[i];
 			if(p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null)
 			{
-				p.img[loadedID] = p.loadImage(path+fileName);
+				p.println(i + ": " + fileNames[i]);
+
+				PImage newimg = p.loadImage(path+fileName);
+				//PApplet.append(p.img, newimg);
+				p.img[loadedID] = newimg;
 				++loadedID;
 			}
 		}

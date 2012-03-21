@@ -74,14 +74,12 @@ private int i;
 		
 		controls.draw();
 
-		grp.draw();
 		p.translate(width/2,height/2);
 		q.translate(width/2,height/2);
 		grp = RG.getText("Hello world!", "FreeSans.ttf", 72, CENTER);
+		grp.draw();
 
-		rotateY(i*PI/50);
 		p.draw();
-		rotateX((i+1)*PI/60);
 		q.draw();
 		i++;
 		
