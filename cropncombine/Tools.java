@@ -10,7 +10,6 @@ import toxi.gui.IntRangeBuilder;
 import controlP5.*;
 
 public class Tools {
-
 	ControlP5 cp5;
 	Slider2D s;
 	CropNCombine p;
@@ -21,11 +20,10 @@ public class Tools {
 	@GUIElement(label = "frameRate")
 	public int frameRate;
 
-	Tools(CropNCombine p5){
+	Tools(CropNCombine p5) {
 		p = p5;
 		frameRate = p.frameRate;
 	}
-
 
 	public void setup() {
 		initGUI();
@@ -34,13 +32,12 @@ public class Tools {
 	void draw() {
 	}
 
-	private void initGUI() {
+	public void initGUI() {
 		ControlP5 cp5 = new ControlP5(p);
 
 		gui = new GUIManager(cp5);
 		gui.createControllers(p, 20, 20, "Control");
-		for (int i = 0; i < cp5.getControllerList().length; i++) 
-		{
+		for (int i = 0; i < cp5.getControllerList().length; i++) {
 			cp5.getControllerList()[i].setColorLabel(0);
 
 		}
@@ -58,21 +55,23 @@ public class Tools {
 		}
 	}
 
-	public void populate(boolean reset){
-		String path = "/Users/Gaston/Desktop/proc/";
+	public void populate(boolean reset) {
+		String path = p.targetFolder;
 		String[] fileNames = listFileNames(path);
-		if(reset)
+
+		if (reset)
 			loadedID = 0;
-		p.println(path + ": " +fileNames.length);
-		for(int i = 0; i < fileNames.length; i++)
-		{	
-			String fileName =  fileNames[i];
-			if(p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null)
-			{
+		p.println(path + ": " + fileNames.length);
+		
+		for (int i = 0; i < fileNames.length; i++) {
+			
+			String fileName = fileNames[i];
+			
+			if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
 				p.println(i + ": " + fileNames[i]);
 
-				PImage newimg = p.loadImage(path+fileName);
-				//PApplet.append(p.img, newimg);
+				PImage newimg = p.loadImage(path + fileName);
+				p.append(p.img, newimg);
 				p.img[loadedID] = newimg;
 				++loadedID;
 			}
