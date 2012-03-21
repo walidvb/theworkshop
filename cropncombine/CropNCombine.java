@@ -2,9 +2,11 @@ package cropncombine;
 
 
 
-import java.io.File;
 
 
+import geomerative.RG;
+import geomerative.RPolygon;
+import geomerative.RShape;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -27,19 +29,31 @@ public class CropNCombine extends PApplet {
 	public int dir = 0;
 	private int state = 3;
 	private int n;
-	
-    Tools controls = new Tools(this);
+private int i;
+	Tools controls = new Tools(this);
+	RShape grp;
+	 RPolygon p,q;
 
 	public void setup() {
 		frameRate(frameRate);
+		RG.init(this);
 
 		size(totWidth, totHeight);
 		controls.populate(true);
 		controls.setup();
+
+
+		p = new RPolygon();
+		q = new RPolygon();
+
+		p = p.createRing(100f, 80f, 4);
+		q = p.createRing(60f, 40f, 3);
 	}
 
 	public void draw() {
-		controls.draw();
+
+
+
 		switch(state)
 		{
 		case SETUP:
@@ -53,10 +67,24 @@ public class CropNCombine extends PApplet {
 		case BCK:
 			horStripes(-1);
 			break;
-		
+
 		}
 		//draw_=false;
 		button(state, totWidth, totHeight);
+		
+		controls.draw();
+
+		grp.draw();
+		p.translate(width/2,height/2);
+		q.translate(width/2,height/2);
+		grp = RG.getText("Hello world!", "FreeSans.ttf", 72, CENTER);
+
+		rotateY(i*PI/50);
+		p.draw();
+		rotateX((i+1)*PI/60);
+		q.draw();
+		i++;
+		
 	}
 
 	public void mousePressed()
@@ -74,14 +102,26 @@ public class CropNCombine extends PApplet {
 	//----------------------functions
 	//---------Horizontal Stripes
 	void horStripes(int move){
-		PImage tmpimg = createImage(totWidth, totHeight, RGB);
+		PImage tmpimg = createImage(totWidth, totHeight, G);
 
 		n = img.length;
 		int height = totHeight/(n);
-		//make part appear at the beginning
-		int first = (n-1-step);
-		tmpimg.copy(img[first], 0, 0, totWidth, dir, 0, 0, totWidth, dir);
-
+		int fill = 0;
+		int fillOffset = 0;
+		int fillHeight = 0;
+		switch(FWD)
+		{
+		case FWD:
+			//make part appear at the beginning
+			fill = (n-1-step);
+			fillOffset =0;
+			break;
+		case BCK:
+			fill = step;
+			fillOffset = (n)*height+dir;
+			break;
+		}
+		tmpimg.copy(img[fill], 0, fillOffset, totWidth, dir, 0, fillOffset, totWidth, dir);
 		//loop over img[] and take the 1/n percent of each image
 		for(int i = 0; i < n; i++)
 		{
@@ -96,13 +136,18 @@ public class CropNCombine extends PApplet {
 				step = (step+1)%n;
 				dir=0;
 			}
+			else if(offset < 0)
+			{
+				step = (step+1)%n;
+				dir=0;
+			}
 		}
 		dir+=move;
 		image(tmpimg, 0, 0);
 	}
 	//---------Shapes
-	
-	
+
+
 	boolean overRect(int x, int y, int width, int height) 
 	{
 		if (mouseX >= x && mouseX <= x+width && 
@@ -113,7 +158,7 @@ public class CropNCombine extends PApplet {
 		}
 	}
 	//---------Utils
-	
+
 	void button(int state, int xpos, int ypos)
 	{
 		int butWidth = 20;

@@ -33,7 +33,7 @@ public class Tools {
 
 	private void initGUI() {
 		ControlP5 cp5 = new ControlP5(p);
-		tab=cp5.addTab("misc");
+
 		gui = new GUIManager(cp5);
 		gui.createControllers(p, 20, 20, "Control");
 		for (int i = 0; i < cp5.getControllerList().length; i++) 
@@ -64,7 +64,7 @@ public class Tools {
 		for(int i = 0; i < fileNames.length; i++)
 		{
 			String fileName =  fileNames[i];
-			if(p.match(fileName, "((([a-zA-z0-9].)*.(jpeg|gif|jpg)))") != null)
+			if(p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null)
 			{
 				p.img[loadedID] = p.loadImage(path+fileName);
 				++loadedID;
