@@ -8,7 +8,7 @@ import processing.core.PImage;
 
 public class CropNCombine extends PApplet {
 
-	String targetFolder = "/Users/Opuswerk/Documents/workspace/cropncombine/src/data/";
+	String targetFolder = "/Users/Gaston/Desktop/proc/";
 	String[] fileNames;
 
 	final int PAUSE = 0;
@@ -28,9 +28,7 @@ public class CropNCombine extends PApplet {
 	public int dir = 0;
 	private int state = 3;
 	private int imageAmount;
-	Tools controls;
-	RShape grp;
-	RPolygon p, q;
+	Tools tool;
 
 	int imageToDraw = 0;
 
@@ -41,43 +39,21 @@ public class CropNCombine extends PApplet {
 
 		size(totWidth, totHeight);
 
-		controls = new Tools(this);
+		tool = new Tools(this);
 		// controls.populate(true);
-		controls.setup();
+		tool.setup();
 
-		fileNames = controls.listFileNames(targetFolder);
-		img = new PImage[1];
-		img[0] = loadImage(targetFolder + fileNames[0]);
-
-		p = new RPolygon();
-		q = new RPolygon();
-
-		p = p.createRing(100f, 80f, 4);
-		q = p.createRing(60f, 40f, 3);
+		fileNames = tool.listFileNames(targetFolder);
+		img = new PImage[0];
+		//img[0] = loadImage(targetFolder + fileNames[0]);
+		tool.refresh(true);
 	}
 
 	public void draw() {
 		background(0);
 
-		if (loadNext) {
-			
-			int loadedImagesAmount = img.length;
-			PImage ImageToAdd;
-			String imageName = fileNames[img.length + 1];
-			
-			if (img.length == 0) {
-				ImageToAdd = loadImage(targetFolder + imageName);
-			} else {
-				ImageToAdd = loadImage(targetFolder + imageName);
-			}
-			PImage[] img2 = (PImage[]) append(img, ImageToAdd);
-			img = img2;
-			println("this is img length:" + img.length);
-			loadNext = false;
-		}
-
 		int lastImage = img.length;
-		image(img[lastImage - 1], 0, 0);
+		//image(img[lastImage - 1], 0, 0);
 
 		switch (state) {
 		case SETUP:
@@ -95,20 +71,13 @@ public class CropNCombine extends PApplet {
 
 		// draw_=false; button(state, totWidth, totHeight);
 
-		controls.draw();
-
-		p.translate(width / 2, height / 2);
-		q.translate(width / 2, height / 2);
-		// grp = RG.getText("Hello world!", "FreeSans.ttf", 72, CENTER);
-		// grp.draw();
-
-		p.draw();
-		q.draw();
-
+		tool.draw();
+		button(PAUSE, 10, 10);
 	}
 
 	public void mousePressed() {
-		if (overRect(totWidth - 30, totHeight - 30, 20, 20)) {
+		//if (overRect(totWidth - 30, totHeight - 30, 20, 20)) 
+		{
 			state = (state + 1) % STATES;
 			println(state);
 		}
@@ -158,6 +127,7 @@ public class CropNCombine extends PApplet {
 		image(tmpimg, 0, 0);
 	}
 
+	
 	// ---------Shapes
 
 	boolean overRect(int x, int y, int width, int height) {
@@ -218,7 +188,7 @@ public class CropNCombine extends PApplet {
 
 	public void keyReleased() {
 		if (key == 'n')
-			loadNext = true;
+			tool.refresh(true);
 		if (key == 'm')
 			imageToDraw++;
 	}

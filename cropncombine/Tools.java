@@ -17,6 +17,7 @@ public class Tools {
 	Tab tab;
 	private int loadedID = 0;
 	private String fileList[] = new String[0];
+	
 	@GUIElement(label = "frameRate")
 	public int frameRate;
 
@@ -48,32 +49,48 @@ public class Tools {
 		File file = new File(dir);
 		if (file.isDirectory()) {
 			String names[] = file.list();
-			return names;
+			String checked[] = new String[0];
+			for(int i = 0; i<names.length; ++i)
+			{
+				if (PApplet.match(names[i], "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) 
+				{
+					PApplet.append(checked, names[i]);
+				}
+			}
+			return checked;
 		} else {
 			// If it's not a directory
 			return null;
 		}
 	}
 
-	public void populate(boolean reset) {
+	//Method to refresh what's in the folder, 
+	//only adding files not present earlier.
+	public void refresh(boolean reset) {
 		String path = p.targetFolder;
 		String[] fileNames = listFileNames(path);
-
+		
 		if (reset)
 			loadedID = 0;
 		p.println(path + ": " + fileNames.length);
-		
-		for (int i = 0; i < fileNames.length; i++) {
-			
-			String fileName = fileNames[i];
-			
-			if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
-				p.println(i + ": " + fileNames[i]);
 
-				PImage newimg = p.loadImage(path + fileName);
-				p.append(p.img, newimg);
-				p.img[loadedID] = newimg;
-				++loadedID;
+		for (int i = 0; i < fileNames.length; i++) {
+
+			String fileName = fileNames[i];
+			if(fileList.contains(fileName))
+			if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
+				{
+
+					int loadedImagesAmount = p.img.length;
+					PImage ImageToAdd;
+
+					String imageName = fileNames[p.img.length + 1];
+					ImageToAdd = p.loadImage(p.targetFolder + imageName);
+
+					PImage[] img2 = (PImage[]) PApplet.append(p.img, ImageToAdd);
+					p.img = img2;
+					PApplet.println("this is img length:" + p.img.length);
+				}
 			}
 		}
 	}
