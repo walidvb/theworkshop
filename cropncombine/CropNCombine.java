@@ -8,13 +8,11 @@ import processing.core.PImage;
 
 public class CropNCombine extends PApplet {
 
-	String targetFolder = "/Users/Gaston/Desktop/proc/";
-	String[] fileNames;
 
 	final int PAUSE = 0;
 	final int FWD = 1;
 	final int BCK = 2;
-	final int SETUP = 3;
+	final int SETUP = 50;
 	final int STATES = 3;
 	/**
 	 * 
@@ -43,10 +41,8 @@ public class CropNCombine extends PApplet {
 		// controls.populate(true);
 		tool.setup();
 
-		fileNames = tool.listFileNames(targetFolder);
 		img = new PImage[0];
-		//img[0] = loadImage(targetFolder + fileNames[0]);
-		tool.refresh(true);
+		imageAmount = tool.refresh(true);
 	}
 
 	public void draw() {
@@ -79,7 +75,6 @@ public class CropNCombine extends PApplet {
 		//if (overRect(totWidth - 30, totHeight - 30, 20, 20)) 
 		{
 			state = (state + 1) % STATES;
-			println(state);
 		}
 	}
 
@@ -93,6 +88,7 @@ public class CropNCombine extends PApplet {
 		int fill = 0;
 		int fillOffset = 0;
 		int fillHeight = 0;
+		
 		switch (FWD) {
 		case FWD:
 			// make part appear at the beginning
@@ -188,7 +184,7 @@ public class CropNCombine extends PApplet {
 
 	public void keyReleased() {
 		if (key == 'n')
-			tool.refresh(true);
+			imageAmount = tool.refresh(true);
 		if (key == 'm')
 			imageToDraw++;
 	}

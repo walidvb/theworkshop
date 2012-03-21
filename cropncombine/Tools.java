@@ -6,7 +6,6 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import toxi.gui.GUIElement;
 import toxi.gui.GUIManager;
-import toxi.gui.IntRangeBuilder;
 import controlP5.*;
 
 public class Tools {
@@ -15,9 +14,10 @@ public class Tools {
 	CropNCombine p;
 	GUIManager gui;
 	Tab tab;
-	private int loadedID = 0;
-	private String fileList[] = new String[0];
-	
+	String targetFolder = "/Users/Gaston/Desktop/proc1/";
+
+	private String[] fileList = new String[0];
+
 	@GUIElement(label = "frameRate")
 	public int frameRate;
 
@@ -27,6 +27,7 @@ public class Tools {
 	}
 
 	public void setup() {
+		PApplet.println("place pictures in : " + targetFolder);
 		initGUI();
 	}
 
@@ -54,7 +55,8 @@ public class Tools {
 			{
 				if (PApplet.match(names[i], "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) 
 				{
-					PApplet.append(checked, names[i]);
+					String[] tmp = PApplet.append(checked, names[i]);
+					checked = tmp;
 				}
 			}
 			return checked;
@@ -66,32 +68,47 @@ public class Tools {
 
 	//Method to refresh what's in the folder, 
 	//only adding files not present earlier.
-	public void refresh(boolean reset) {
+	public int refresh(boolean reset) {
 		String path = p.targetFolder;
 		String[] fileNames = listFileNames(path);
-		
-		if (reset)
-			loadedID = 0;
-		p.println(path + ": " + fileNames.length);
+
 
 		for (int i = 0; i < fileNames.length; i++) {
 
 			String fileName = fileNames[i];
-			if(fileList.contains(fileName))
-			if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
-				{
+			
+			if(!contains(fileList, fileName))
+			{
+				if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
+					{
 
-					int loadedImagesAmount = p.img.length;
-					PImage ImageToAdd;
+						int loadedImagesAmount = p.img.length;
+						PImage ImageToAdd;
 
-					String imageName = fileNames[p.img.length + 1];
-					ImageToAdd = p.loadImage(p.targetFolder + imageName);
-
-					PImage[] img2 = (PImage[]) PApplet.append(p.img, ImageToAdd);
-					p.img = img2;
-					PApplet.println("this is img length:" + p.img.length);
+						String[] newList = PApplet.append(fileList, fileName);
+						fileList = newList;
+						ImageToAdd = p.loadImage(targetFolder + fileName);
+						PImage[] img2 = (PImage[]) PApplet.append(p.img, ImageToAdd);
+						p.img = img2;
+						PApplet.println(fileName+ " added.");
+					}
 				}
 			}
 		}
+		return fileList.length;
+	}
+
+	private boolean contains(String[] list, String test){
+		boolean contains = false;
+		for(int i = 0; i < list.length; i++)
+		{
+
+			if(list[i].equals(test)) 
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
+
