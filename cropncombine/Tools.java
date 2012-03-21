@@ -12,8 +12,10 @@ public class Tools {
 	ControlP5 cp5;
 	Slider2D s;
 	CropNCombine p;
-	GUIManager gui;
-	Tab tab;
+	/*GUIManager gui;
+	Tab tab;*/
+	
+	//path to pictures
 	String targetFolder = "/Users/Gaston/Desktop/proc1/";
 
 	private String[] fileList = new String[0];
@@ -33,18 +35,23 @@ public class Tools {
 
 	void draw() {
 	}
+	
+	//-------------------Controls Work
 
 	public void initGUI() {
-		ControlP5 cp5 = new ControlP5(p);
-
-		gui = new GUIManager(cp5);
-		gui.createControllers(p, 20, 20, "Control");
-		for (int i = 0; i < cp5.getControllerList().length; i++) {
-			cp5.getControllerList()[i].setColorLabel(0);
-
-		}
+		  ControlP5 cp5=new ControlP5(p);
+		  GUIManager gui=new GUIManager(cp5);
+		  gui.createControllers(cp5);
+		  gui.addListenerFor("frameRate", "frameRate_", cp5);
 
 	}
+	
+	public void frameRate_(ControlEvent e)
+	{
+		frameRate = (int)e.value();
+		p.frameRate = (int)e.value();
+	}
+	//-------------------File Work
 
 	String[] listFileNames(String dir) {
 		File file = new File(dir);
@@ -69,14 +76,13 @@ public class Tools {
 	//Method to refresh what's in the folder, 
 	//only adding files not present earlier.
 	public int refresh(boolean reset) {
-		String path = p.targetFolder;
-		String[] fileNames = listFileNames(path);
+		String[] fileNames = listFileNames(targetFolder);
 
 
 		for (int i = 0; i < fileNames.length; i++) {
 
 			String fileName = fileNames[i];
-			
+
 			if(!contains(fileList, fileName))
 			{
 				if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
@@ -111,4 +117,5 @@ public class Tools {
 		return false;
 	}
 }
+
 
