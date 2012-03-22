@@ -1,8 +1,6 @@
 package cropncombine;
 
-import geomerative.RG;
-import geomerative.RPolygon;
-import geomerative.RShape;
+import fullscreen.FullScreen;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -14,9 +12,9 @@ public class CropNCombine extends PApplet {
 	final int BCK = 2;
 	final int SETUP = 50;
 	final int STATES = 3;
-	/**
-	 * 
-	 */
+	FullScreen fs; 
+
+	
 	public int frameRate = 30;
 	private static final long serialVersionUID = 1L;
 	public PImage img[];
@@ -33,23 +31,23 @@ public class CropNCombine extends PApplet {
 	public boolean loadNext = false;
 
 	public void setup() {
-		RG.init(this);
 
-		size(totWidth, totHeight);
-
-		tool = new Tools(this);
+		size(450, 450);
+		String folderPath = selectFolder("Choose the folder where your pictures will be stored") + "/";
+		tool = new Tools(this, folderPath);
 		// controls.populate(true);
 		tool.setup();
 
 		img = new PImage[0];
 		imageAmount = tool.refresh(true);
+		/*fs = new FullScreen(this);
+		fs.enter();
+		fs.setShortcutsEnabled(true);
+*/
 	}
 
 	public void draw() {
 		background(0);
-
-		int lastImage = img.length;
-		//image(img[lastImage - 1], 0, 0);
 
 		switch (state) {
 		case SETUP:
@@ -87,12 +85,11 @@ public class CropNCombine extends PApplet {
 		int height = totHeight / (imageAmount);
 		int fill = 0;
 		int fillOffset = 0;
-		int fillHeight = 0;
-		
+
 		switch (FWD) {
 		case FWD:
 			// make part appear at the beginning
-			fill = (imageAmount - 1 - step);
+			fill = (imageAmount - 1 - step > 0)? (imageAmount - 1 - step): 0;
 			fillOffset = 0;
 			break;
 		case BCK:
@@ -123,7 +120,7 @@ public class CropNCombine extends PApplet {
 		image(tmpimg, 0, 0);
 	}
 
-	
+
 	// ---------Shapes
 
 	boolean overRect(int x, int y, int width, int height) {
@@ -185,7 +182,9 @@ public class CropNCombine extends PApplet {
 	public void keyReleased() {
 		if (key == 'n')
 			imageAmount = tool.refresh(true);
+		if (key == 'f')
 		if (key == 'm')
 			imageToDraw++;
 	}
+	
 }

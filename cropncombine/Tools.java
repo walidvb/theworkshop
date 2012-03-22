@@ -23,9 +23,10 @@ public class Tools {
 	@GUIElement(label = "frameRate")
 	public int frameRate;
 
-	Tools(CropNCombine p5) {
+	Tools(CropNCombine p5, String folderPath) {
 		p = p5;
 		frameRate = p.frameRate;
+		targetFolder = folderPath;
 	}
 
 	public void setup() {
