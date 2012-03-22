@@ -12,9 +12,10 @@ public class Tools {
 	ControlP5 cp5;
 	Slider2D s;
 	CropNCombine p;
+	int limit = 50;
 	/*GUIManager gui;
 	Tab tab;*/
-	
+
 	//path to pictures
 	String targetFolder = "/Users/Gaston/Desktop/proc1/";
 
@@ -31,27 +32,13 @@ public class Tools {
 
 	public void setup() {
 		PApplet.println("place pictures in : " + targetFolder);
-		initGUI();
 	}
 
 	void draw() {
 	}
-	
+
 	//-------------------Controls Work
 
-	public void initGUI() {
-		  ControlP5 cp5=new ControlP5(p);
-		  GUIManager gui=new GUIManager(cp5);
-		  gui.createControllers(cp5);
-		  gui.addListenerFor("frameRate", "frameRate_", cp5);
-
-	}
-	
-	public void frameRate_(ControlEvent e)
-	{
-		frameRate = (int)e.value();
-		p.frameRate = (int)e.value();
-	}
 	//-------------------File Work
 
 	String[] listFileNames(String dir) {
@@ -81,14 +68,15 @@ public class Tools {
 
 
 		for (int i = 0; i < fileNames.length; i++) {
-
+			if(p.img.length > 60)
+				break;
 			String fileName = fileNames[i];
 
 			if(!contains(fileList, fileName))
 			{
-				if (p.match(fileName, "((([a-zA-z0-9]|.|_)*.(jpeg|gif|jpg)))") != null) {
+				if (fileName.endsWith("jpeg") || fileName.endsWith("jpg") || fileName.endsWith("gif") || fileName.endsWith("png")) {
 					{
-
+						
 						int loadedImagesAmount = p.img.length;
 						PImage ImageToAdd;
 

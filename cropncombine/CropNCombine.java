@@ -14,58 +14,48 @@ public class CropNCombine extends PApplet {
 	final int STATES = 3;
 	FullScreen fs; 
 
-	
-	public int frameRate = 30;
+
+	public int frameRate = 10;
 	private static final long serialVersionUID = 1L;
-	public PImage img[];
-	private int totHeight = 450;
-	private int totWidth = 450;
-	private int step = 0;
-	public int dir = 0;
-	private int state = 3;
+	public PImage img[] = new PImage[0];
+	public int dir = 1;
+	private int state = FWD;
 	private int imageAmount;
 	Tools tool;
-
+	Masking masks;
 	int imageToDraw = 0;
 
 	public boolean loadNext = false;
 
 	public void setup() {
 
-		size(450, 450);
+		size(480, 640);
 		String folderPath = selectFolder("Choose the folder where your pictures will be stored") + "/";
 		tool = new Tools(this, folderPath);
-		// controls.populate(true);
+		imageAmount = tool.refresh(true);
+		println(imageAmount);
+		masks = new Masking(this.width, this.height, this);
+		masks.setup();
 		tool.setup();
 
 		img = new PImage[0];
-		imageAmount = tool.refresh(true);
-		/*fs = new FullScreen(this);
-		fs.enter();
-		fs.setShortcutsEnabled(true);
-*/
+
 	}
 
 	public void draw() {
 		background(0);
 
-		switch (state) {
-		case SETUP:
-			break;
-		case PAUSE:
-			horStripes(0);
+		switch(state)
+		{
+		case PAUSE: 
 			break;
 		case FWD:
-			horStripes(1);
-			break;
-		case BCK:
-			horStripes(-1);
+			masks.update(dir);
 			break;
 		}
 
-		// draw_=false; button(state, totWidth, totHeight);
-
-		tool.draw();
+		for(PImage result : masks.resultImgs)
+			image(result, 0, 0);
 		button(PAUSE, 10, 10);
 	}
 
@@ -77,50 +67,16 @@ public class CropNCombine extends PApplet {
 	}
 
 	// ----------------------functions
-	// ---------Horizontal Stripes
-	void horStripes(int move) {
-		PImage tmpimg = createImage(totWidth, totHeight, G);
+	public void keyReleased()
+	{
+		if(key == ' ' || key== 'r')
+		{
 
-		imageAmount = img.length;
-		int height = totHeight / (imageAmount);
-		int fill = 0;
-		int fillOffset = 0;
-
-		switch (FWD) {
-		case FWD:
-			// make part appear at the beginning
-			fill = (imageAmount - 1 - step > 0)? (imageAmount - 1 - step): 0;
-			fillOffset = 0;
-			break;
-		case BCK:
-			fill = step;
-			fillOffset = (imageAmount) * height + dir;
-			break;
+			PApplet.println("refreshing");
+			tool.refresh(true);
+			masks.setup();
 		}
-		tmpimg.copy(img[fill], 0, fillOffset, totWidth, dir, 0, fillOffset,
-				totWidth, dir);
-		// loop over img[] and take the 1/n percent of each image
-		for (int i = 0; i < imageAmount; i++) {
-			int pos = (i + step) % (imageAmount);
-			int offset = pos * height + dir;
-
-			tmpimg.copy(img[i], 0, offset, totWidth, height, 0, offset,
-					totWidth, height);
-
-			// Make 'em move and return to beginning
-			if (offset > totHeight) {
-				step = (step + 1) % imageAmount;
-				dir = 0;
-			} else if (offset < 0) {
-				step = (step + 1) % imageAmount;
-				dir = 0;
-			}
-		}
-		dir += move;
-		image(tmpimg, 0, 0);
 	}
-
-
 	// ---------Shapes
 
 	boolean overRect(int x, int y, int width, int height) {
@@ -179,12 +135,4 @@ public class CropNCombine extends PApplet {
 
 	}
 
-	public void keyReleased() {
-		if (key == 'n')
-			imageAmount = tool.refresh(true);
-		if (key == 'f')
-		if (key == 'm')
-			imageToDraw++;
-	}
-	
 }
